@@ -5,7 +5,7 @@ from group.models import Group
 
 def generate_group(request):
     for _ in range(15):
-        Group.generate_teacher()
+        Group.generate_group()
     abc = Group.objects.all()
     return HttpResponse(abc)
 
