@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Groups list</title>
+</head>
+<body>
+
+    <form>
+        <label for="gname">Group name:</label><br>
+        <input type="text" id="gname" name="gname"><br>
+        <label for="gnum">Number of group:</label><br>
+        <input type="text" id="gnum" name="gnum"><br>
+        <button type="submit">Search</button>
+    </form>
+
+{{ groups_list|safe }}
+
+</body>
+</html>

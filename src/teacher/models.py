@@ -11,7 +11,7 @@ class Teacher(models.Model):
     birthdate = models.DateField(default=datetime.datetime.now())
 
     def __str__(self):
-        return f'{self.first_name}, {self.last_name}, {self.birthdate}'
+        return f'{self.first_name}, {self.last_name}, {self.email}'
 
     @classmethod
     def generate_teacher(cls):
