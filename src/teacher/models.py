@@ -11,12 +11,10 @@ class Teacher(models.Model):
     phone_number = models.CharField(max_length=12, default=380000000000, unique=True)
 
     class Meta:
-        #unique_together = ('first_name', 'last_name')
+        # unique_together = ('first_name', 'last_name')
         constraints = [
             models.UniqueConstraint(fields=['first_name', 'last_name'], name='name of constraint teachers')
         ]
-    ## работает в обеих случаях, ниже описание почему именно второй вариант
-
     '''
         From https://docs.djangoproject.com/en/dev/ref/models/options/#unique-together
         Use UniqueConstraint with the constraints option instead.

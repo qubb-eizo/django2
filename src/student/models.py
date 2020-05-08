@@ -11,10 +11,11 @@ class Student(models.Model):
     phone_number = models.CharField(default=380000000000, max_length=15, unique=True)
 
     class Meta:
-        #unique_together = ('first_name', 'last_name')
+        # unique_together = ('first_name', 'last_name')
         constraints = [
             models.UniqueConstraint(fields=['first_name', 'last_name'], name='name of constraint students')
         ]
+
     '''
         From https://docs.djangoproject.com/en/dev/ref/models/options/#unique-together
         Use UniqueConstraint with the constraints option instead.
