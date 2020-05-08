@@ -21,8 +21,8 @@ from group.views import groups_list, generate_group, groups_add
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls, name='admin'),
-    path('', admin.site.urls, name='admin'),
+    path('admin/', admin.site.urls, name='admin-panel'),
+    path('', admin.site.urls, name='admin-panel1'),
     path('teachers/', teachers_list, name='teachers'),
     path('students/', students_list, name='students'),
     path('groups/', groups_list, name='groups'),
