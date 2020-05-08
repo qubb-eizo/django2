@@ -9,7 +9,8 @@ class Group(models.Model):
     group_number = models.CharField(max_length=2, null=False)
 
     def __str__(self):
-        return f'{self.group_name}, {self.group_number}'
+        return f'{self.group_name}, ' \
+               f'{self.group_number}'
 
     @classmethod
     def generate_group(cls):
