@@ -1,9 +1,10 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render
 from django.urls import reverse
 
-from student.forms import StudentAddForm
+from student.forms import StudentAddForm, StudentEditForm, StudentDeleteForm
 from student.models import Student
 
 
@@ -21,20 +22,16 @@ def students_list(request):
         qs = qs.filter(Q(first_name=request.GET.get('fname')) | Q(
             last_name=request.GET.get('lname')) | Q(email=request.GET.get('email')))
 
-    result = '<br>'.join(
-        str(student)
-        for student in qs
-    )
-
     return render(
         request=request,
         template_name='students_list.html',
-        context={'students_list': result}
+        context={'students_list': qs,
+                 'title': 'Students list'
+                 }
     )
 
 
 def students_add(request):
-
     if request.method == 'POST':
         form = StudentAddForm(request.POST)
         if form.is_valid():
@@ -46,5 +43,60 @@ def students_add(request):
     return render(
         request=request,
         template_name='students_add.html',
-        context={'form': form}
+        context={
+            'form': form,
+            'title': 'Students add'
+        }
+    )
+
+
+def students_edit(request, id):
+    try:
+        student = Student.objects.get(id=id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound(f'student with id={id} does not exist')
+
+    if request.method == 'POST':
+        form = StudentEditForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('students'))
+    else:
+        form = StudentEditForm(
+            instance=student
+        )
+
+    return render(
+        request=request,
+        template_name='students_edit.html',
+        context={
+            'form': form,
+            'title': 'Student edit'
+        },
+    )
+
+
+def students_delete(request, id):
+    try:
+        student = Student.objects.get(id=id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound(f'student with id={id} does not exist')
+
+    if request.method == 'POST':
+        form = StudentDeleteForm(request.POST, instance=student)
+        student.delete()
+        if form.is_valid():
+            return HttpResponseRedirect(reverse('students'))
+    else:
+        form = StudentDeleteForm(
+            instance=student
+        )
+
+    return render(
+        request=request,
+        template_name='students_delete.html',
+        context={
+            'form': form,
+            'title': 'Student delete'
+        },
     )

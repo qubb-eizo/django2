@@ -1,25 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Teachers list</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block content %}
 
     <form>
         <label for="tfname">First name:</label><br>
         <input type="text" id="tfname" name="tfname"><br>
-
         <label for="tlname">Last name:</label><br>
         <input type="text" id="tlname" name="tlname"><br>
-
         <label for="email">Email:</label><br>
         <input type="text" id="email" name="email"><br>
-
         <button type="submit">Search</button>
     </form>
 
-{{ teachers_list|safe }}
+    {% for teacher in teachers_list %}
+        {{ teacher.id }}
+        <a href="/teachers/edit/{{teacher.id}}">{{ teacher.first_name }}  {{ teacher.last_name }}</a>
+        {{ teacher.email }}
+        <br>
+    {% empty %}
+        <p>Sorry, list is empty</p>
+    {% endfor %}
 
-</body>
-</html>
+{% endblock %}

@@ -1,12 +1,13 @@
 import random
-
 from django.db import models
 from faker import Faker
+from teacher.models import Teacher
 
 
 class Group(models.Model):
     group_name = models.CharField(max_length=40, null=False)
     group_number = models.CharField(max_length=2, null=False)
+    teacher = models.ForeignKey(to=Teacher, null=True, on_delete=models.SET_NULL, db_constraint=True)
 
     def __str__(self):
         return f'{self.group_name}, ' \
