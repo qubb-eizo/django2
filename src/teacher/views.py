@@ -1,10 +1,11 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render
 from django.urls import reverse
 from django.db.models import Q
 
 from teacher.models import Teacher
-from teacher.forms import TeacherAddForm
+from teacher.forms import TeacherAddForm, TeacherEditForm
 
 
 def generate_teachers(request):
@@ -26,7 +27,9 @@ def teachers_list(request):
     return render(
         request=request,
         template_name='teachers_list.html',
-        context={'teachers_list': result}
+        context={'teachers_list': qsg,
+                 'title': 'Teachers list'
+                 }
     )
 
 
@@ -43,5 +46,33 @@ def teachers_add(request):
     return render(
         request=request,
         template_name='teachers_add.html',
-        context={'form': form}
+        context={'form': form,
+                 'title': 'Teachers add'
+                 }
+    )
+
+
+def teachers_edit(request, id):
+    try:
+        teacher = Teacher.objects.get(id=id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound(f'teacher with id={id} does not exist')
+
+    if request.method == 'POST':
+        form = TeacherEditForm(request.POST, instance=teacher)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('teachers'))
+    else:
+        form = TeacherEditForm(
+            instance=teacher
+        )
+
+    return render(
+        request=request,
+        template_name='teachers_edit.html',
+        context={
+            'form': form,
+            'title': 'Teachers edit'
+        }
     )
