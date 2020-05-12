@@ -22,8 +22,6 @@ def students_list(request):
         qs = qs.filter(Q(first_name=request.GET.get('fname')) | Q(
             last_name=request.GET.get('lname')) | Q(email=request.GET.get('email')))
 
-    result = '<br>'.join(str(student) for student in qs)
-
     return render(
         request=request,
         template_name='students_list.html',
@@ -88,7 +86,6 @@ def students_delete(request, id):
         form = StudentDeleteForm(request.POST, instance=student)
         student.delete()
         if form.is_valid():
-            form.save()
             return HttpResponseRedirect(reverse('students'))
     else:
         form = StudentDeleteForm(

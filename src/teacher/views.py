@@ -22,8 +22,6 @@ def teachers_list(request):
         qsg = qsg.filter(Q(first_name=request.GET.get('tfname')) | Q(
             last_name=request.GET.get('tlname')) | Q(email=request.GET.get('email')))
 
-    result = '<br>'.join(str(group) for group in qsg)
-
     return render(
         request=request,
         template_name='teachers_list.html',

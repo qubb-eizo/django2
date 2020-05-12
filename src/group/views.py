@@ -22,8 +22,6 @@ def groups_list(request):
         qsg = qsg.filter(Q(group_name=request.GET.get('gname')) | Q(
             group_number=request.GET.get('gnum')))
 
-    result = '<br>'.join(str(group) for group in qsg)
-
     return render(
         request=request,
         template_name='groups_list.html',
