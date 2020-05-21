@@ -79,17 +79,17 @@ def groups_edit(request, id):
 
 def groups_delete(request, id):
     try:
-        student = Group.objects.get(id=id)
+        group = Group.objects.get(id=id)
     except ObjectDoesNotExist:
         return HttpResponseNotFound(f'group with id={id} does not exist')
 
     if request.method == 'POST':
-        form = GroupDeleteForm(request.POST, instance=student)
-        student.delete()
+        form = GroupDeleteForm(request.POST, instance=group)
+        group.delete()
         if form.is_valid():
             return HttpResponseRedirect(reverse('groups'))
     else:
-        form = GroupDeleteForm(instance=student)
+        form = GroupDeleteForm(instance=group)
 
     return render(
         request=request,
