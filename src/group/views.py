@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render
 from django.urls import reverse
 
-from group.forms import GroupAddForm, GroupEditForm
+from group.forms import GroupAddForm, GroupEditForm, GroupDeleteForm
 from group.models import Group
 
 
@@ -71,6 +71,31 @@ def groups_edit(request, id):
         template_name='groups_edit.html',
         context={
             'form': form,
-            'title': 'Groups edit'
+            'title': 'Groups edit',
+            'group': group
         }
+    )
+
+
+def groups_delete(request, id):
+    try:
+        group = Group.objects.get(id=id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound(f'group with id={id} does not exist')
+
+    if request.method == 'POST':
+        form = GroupDeleteForm(request.POST, instance=group)
+        group.delete()
+        if form.is_valid():
+            return HttpResponseRedirect(reverse('groups'))
+    else:
+        form = GroupDeleteForm(instance=group)
+
+    return render(
+        request=request,
+        template_name='groups_delete.html',
+        context={
+            'form': form,
+            'title': 'Group delete'
+        },
     )

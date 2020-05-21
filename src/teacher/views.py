@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.db.models import Q
 
 from teacher.models import Teacher
-from teacher.forms import TeacherAddForm, TeacherEditForm
+from teacher.forms import TeacherAddForm, TeacherEditForm, TeacherDeleteForm
 
 
 def generate_teachers(request):
@@ -71,6 +71,33 @@ def teachers_edit(request, id):
         template_name='teachers_edit.html',
         context={
             'form': form,
-            'title': 'Teachers edit'
+            'title': 'Teachers edit',
+            'teacher': teacher
         }
+    )
+
+
+def teachers_delete(request, id):
+    try:
+        teacher = Teacher.objects.get(id=id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound(f'teacher with id={id} does not exist')
+
+    if request.method == 'POST':
+        form = TeacherDeleteForm(request.POST, instance=teacher)
+        teacher.delete()
+        if form.is_valid():
+            return HttpResponseRedirect(reverse('teachers'))
+    else:
+        form = TeacherDeleteForm(
+            instance=teacher
+        )
+
+    return render(
+        request=request,
+        template_name='teachers_delete.html',
+        context={
+            'form': form,
+            'title': 'Teacher delete'
+        },
     )

@@ -16,7 +16,7 @@ def generate_students(request):
 
 
 def students_list(request):
-    qs = Student.objects.all()
+    qs = Student.objects.all().select_related('group')
 
     if request.GET.get('fname') or request.GET.get('lname') or request.GET.get('email'):
         qs = qs.filter(Q(first_name=request.GET.get('fname')) | Q(
@@ -71,7 +71,8 @@ def students_edit(request, id):
         template_name='students_edit.html',
         context={
             'form': form,
-            'title': 'Student edit'
+            'title': 'Student edit',
+            'student': student
         },
     )
 
