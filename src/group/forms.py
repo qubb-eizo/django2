@@ -14,3 +14,7 @@ class GroupAddForm(GroupBaseForm):
 
 class GroupEditForm(GroupBaseForm):
     pass
+
+
+class GroupDeleteForm(GroupBaseForm):
+    pass
