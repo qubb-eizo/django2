@@ -1,10 +1,9 @@
-from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
-from django.shortcuts import render
+from django.http import HttpResponse
 from django.urls import reverse
+from django.views.generic import ListView, UpdateView, CreateView, DeleteView
 
-from group.forms import GroupAddForm, GroupEditForm, GroupDeleteForm
+from group.forms import GroupAddForm, GroupEditForm
 from group.models import Group
 
 
@@ -15,87 +14,48 @@ def generate_group(request):
     return HttpResponse(abc)
 
 
-def groups_list(request):
-    qsg = Group.objects.all()
+class GroupsListView(ListView):
+    model = Group
+    template_name = 'groups_list.html'
+    context_object_name = 'groups_list'
 
-    if request.GET.get('gname') or request.GET.get('gnum'):
-        qsg = qsg.filter(Q(group_name=request.GET.get('gname')) | Q(
-            group_number=request.GET.get('gnum')))
+    def get_queryset(self):
+        request = self.request
+        qsg = super().get_queryset()
 
-    return render(
-        request=request,
-        template_name='groups_list.html',
-        context={'groups_list': qsg,
-                 'title': 'Groups list'
-                 }
-    )
+        if request.GET.get('gname') or request.GET.get('gnum'):
+            qsg = qsg.filter(Q(group_name=request.GET.get('gname')) | Q(
+                group_number=request.GET.get('gnum')))
 
+        return qsg
 
-def groups_add(request):
-    if request.method == 'POST':
-        form = GroupAddForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('groups'))
-
-    else:
-        form = GroupAddForm()
-
-    return render(
-        request=request,
-        template_name='groups_add.html',
-        context={'form': form,
-                 'title': 'Groups add'
-                 }
-    )
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=None, **kwargs)
+        context['title'] = 'Group list'
+        return context
 
 
-def groups_edit(request, id):
-    try:
-        group = Group.objects.get(id=id)
-    except ObjectDoesNotExist:
-        return HttpResponseNotFound(f'group with id={id} does not exist')
+class GroupsUpdateView(UpdateView):
+    model = Group
+    template_name = 'groups_edit.html'
+    form_class = GroupEditForm
 
-    if request.method == 'POST':
-        form = GroupEditForm(request.POST, instance=group)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('groups'))
-    else:
-        form = GroupEditForm(
-            instance=group
-        )
-
-    return render(
-        request=request,
-        template_name='groups_edit.html',
-        context={
-            'form': form,
-            'title': 'Groups edit',
-            'group': group
-        }
-    )
+    def get_success_url(self):
+        return reverse('groups:list')
 
 
-def groups_delete(request, id):
-    try:
-        group = Group.objects.get(id=id)
-    except ObjectDoesNotExist:
-        return HttpResponseNotFound(f'group with id={id} does not exist')
+class GroupsCreateView(CreateView):
+    model = Group
+    template_name = 'students_add.html'
+    form_class = GroupAddForm
 
-    if request.method == 'POST':
-        form = GroupDeleteForm(request.POST, instance=group)
-        group.delete()
-        if form.is_valid():
-            return HttpResponseRedirect(reverse('groups'))
-    else:
-        form = GroupDeleteForm(instance=group)
+    def get_success_url(self):
+        return reverse('groups:list')
 
-    return render(
-        request=request,
-        template_name='groups_delete.html',
-        context={
-            'form': form,
-            'title': 'Group delete'
-        },
-    )
+
+class GroupsDeleteView(DeleteView):
+    model = Group
+    template_name = 'groups_delete.html'
+
+    def get_success_url(self):
+        return reverse('groups:list')

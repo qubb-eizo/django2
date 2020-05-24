@@ -2,6 +2,10 @@
 
 {% block content %}
 
+    <a href="{% url 'students:list' %}">Students</a>
+    <a href="{% url 'teachers:list' %}">Teachers</a>
+    <a href="{% url 'groups:list' %}">Groups</a>
+
     <form>
         <label for="gname">Group name:</label><br>
         <input type="text" id="gname" name="gname"><br>

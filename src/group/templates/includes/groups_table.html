@@ -1,7 +1,22 @@
-    {% for group in groups_list %}
-        {{ group.id }}
-        <a href="/groups/edit/{{group.id}}">{{ group.group_name }}  {{ group.group_number }}</a>
-        <br>
-    {% empty %}
-        <p>Sorry, list is empty</p>
-    {% endfor %}
+{% if groups_list %}
+    <table border="1px">
+        <tr>
+            <th>ID</th>
+            <th>Group name</th>
+            <th>Group number</th>
+            <th>🗑</th>
+            <th>🖉</th>
+            </tr>
+        {% for group in groups_list %}
+            <tr>
+                <td> {{ group.id }} </td>
+                <td> {{ group.group_name }} </td>
+                <td> {{ group.group_number }} </td>
+                <td> <a href="{% url 'groups:edit' group.id %}">EDIT</a> </td>
+                <td> <a href="{% url 'groups:delete' group.id %}">DEL</a> </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>Sorry, list is empty</p>
+{% endif %}

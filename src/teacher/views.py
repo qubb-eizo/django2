@@ -1,11 +1,10 @@
-from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
-from django.shortcuts import render
-from django.urls import reverse
 from django.db.models import Q
+from django.http import HttpResponse
+from django.urls import reverse
+from django.views.generic import ListView, UpdateView, CreateView, DeleteView
 
+from teacher.forms import TeacherAddForm, TeacherEditForm
 from teacher.models import Teacher
-from teacher.forms import TeacherAddForm, TeacherEditForm, TeacherDeleteForm
 
 
 def generate_teachers(request):
@@ -15,89 +14,48 @@ def generate_teachers(request):
     return HttpResponse(abc)
 
 
-def teachers_list(request):
-    qsg = Teacher.objects.all()
+class TeachersListView(ListView):
+    model = Teacher
+    template_name = 'teachers_list.html'
+    context_object_name = 'teachers_list'
 
-    if request.GET.get('tfname') or request.GET.get('tlname') or request.GET.get('email'):
-        qsg = qsg.filter(Q(first_name=request.GET.get('tfname')) | Q(
-            last_name=request.GET.get('tlname')) | Q(email=request.GET.get('email')))
+    def get_queryset(self):
+        request = self.request
+        qsg = super().get_queryset()
 
-    return render(
-        request=request,
-        template_name='teachers_list.html',
-        context={'teachers_list': qsg,
-                 'title': 'Teachers list'
-                 }
-    )
+        if request.GET.get('tfname') or request.GET.get('tlname') or request.GET.get('email'):
+            qsg = qsg.filter(Q(first_name=request.GET.get('tfname')) | Q(
+                last_name=request.GET.get('tlname')) | Q(email=request.GET.get('email')))
 
+        return qsg
 
-def teachers_add(request):
-    if request.method == 'POST':
-        form = TeacherAddForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('teachers'))
-
-    else:
-        form = TeacherAddForm()
-
-    return render(
-        request=request,
-        template_name='teachers_add.html',
-        context={'form': form,
-                 'title': 'Teachers add'
-                 }
-    )
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=None, **kwargs)
+        context['title'] = 'Teacher list'
+        return context
 
 
-def teachers_edit(request, id):
-    try:
-        teacher = Teacher.objects.get(id=id)
-    except ObjectDoesNotExist:
-        return HttpResponseNotFound(f'teacher with id={id} does not exist')
+class TeachersUpdateView(UpdateView):
+    model = Teacher
+    template_name = 'teachers_edit.html'
+    form_class = TeacherEditForm
 
-    if request.method == 'POST':
-        form = TeacherEditForm(request.POST, instance=teacher)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('teachers'))
-    else:
-        form = TeacherEditForm(
-            instance=teacher
-        )
-
-    return render(
-        request=request,
-        template_name='teachers_edit.html',
-        context={
-            'form': form,
-            'title': 'Teachers edit',
-            'teacher': teacher
-        }
-    )
+    def get_success_url(self):
+        return reverse('teachers:list')
 
 
-def teachers_delete(request, id):
-    try:
-        teacher = Teacher.objects.get(id=id)
-    except ObjectDoesNotExist:
-        return HttpResponseNotFound(f'teacher with id={id} does not exist')
+class TeachersCreateView(CreateView):
+    model = Teacher
+    template_name = 'teachers_add.html'
+    form_class = TeacherAddForm
 
-    if request.method == 'POST':
-        form = TeacherDeleteForm(request.POST, instance=teacher)
-        teacher.delete()
-        if form.is_valid():
-            return HttpResponseRedirect(reverse('teachers'))
-    else:
-        form = TeacherDeleteForm(
-            instance=teacher
-        )
+    def get_success_url(self):
+        return reverse('teachers:list')
 
-    return render(
-        request=request,
-        template_name='teachers_delete.html',
-        context={
-            'form': form,
-            'title': 'Teacher delete'
-        },
-    )
+
+class TeachersDeleteView(DeleteView):
+    model = Teacher
+    template_name = 'teachers_delete.html'
+
+    def get_success_url(self):
+        return reverse('teachers:list')
