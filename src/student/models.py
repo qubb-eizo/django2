@@ -28,11 +28,7 @@ class Student(models.Model):
                f'{self.phone_number}'
 
     def __str__(self):
-        return f'{self.first_name}, ' \
-               f'{self.last_name}, ' \
-               f'{self.email},' \
-               f'{self.phone_number},' \
-               f'{self.birthdate}'
+        return self.full_info()
 
     @classmethod
     def generate_student(cls, groups=None):

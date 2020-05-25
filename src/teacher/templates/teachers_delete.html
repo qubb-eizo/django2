@@ -2,10 +2,6 @@
 
 {% block content %}
 
-    <a href="{% url 'students:list' %}">Students</a>
-    <a href="{% url 'teachers:list' %}">Teachers</a>
-    <a href="{% url 'groups:list' %}">Groups</a>
-
     <form method="post">
             {% csrf_token %}
             <p>
