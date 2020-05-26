@@ -21,12 +21,14 @@ class Student(models.Model):
             models.UniqueConstraint(fields=['first_name', 'last_name'], name='name of constraint students')
         ]
 
-    def __str__(self):
-        return f'{self.first_name}, ' \
+    def full_info(self):
+        return f'{self.first_name}  ' \
                f'{self.last_name}, ' \
-               f'{self.email},' \
-               f'{self.phone_number},' \
-               f'{self.birthdate}'
+               f'{self.email}, ' \
+               f'{self.phone_number}'
+
+    def __str__(self):
+        return self.full_info()
 
     @classmethod
     def generate_student(cls, groups=None):

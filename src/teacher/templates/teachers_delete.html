@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
     <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
+            <p>
+                Do u really want to delete teacher <b> {{ teacher.full_info }} </b>?
+            </p>
         <button type="submit">Delete</button>
     </form>
 
