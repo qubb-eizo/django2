@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 from teacher.models import Teacher
 
@@ -13,7 +14,12 @@ class TeacherAddForm(TeacherBaseForm):
 
 
 class TeacherEditForm(TeacherBaseForm):
-    pass
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if Teacher.objects.all().filter(email=email).exists():
+            raise ValidationError('Email already exist')
+        return email
 
 
 class TeacherDeleteForm(TeacherBaseForm):
