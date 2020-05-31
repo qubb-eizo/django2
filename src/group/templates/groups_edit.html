@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 
     <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
-        <button type="submit">Save</button>
+            {{ form|crispy }}
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="{% url 'groups:list' %}" class="btn btn-light">Cancel</a>
     </form>
 
     {% with students_list=group.students.all %}

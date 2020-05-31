@@ -3,11 +3,19 @@
 {% block content %}
 
     <form>
-        <label for="gname">Group name:</label><br>
-        <input type="text" id="gname" name="gname"><br>
-        <label for="gnum">Number of group:</label><br>
-        <input type="text" id="gnum" name="gnum"><br>
-        <button type="submit">Search</button>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Group name</span>
+          </div>
+          <input  name="gname" type="text" class="form-control" placeholder="Group name" aria-label="firstname" aria-describedby="basic-addon1">
+
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Group number</span>
+          </div>
+          <input  name="gnum" type="text" class="form-control" placeholder="Group number" aria-label="lastname" aria-describedby="basic-addon1">
+
+          <button type="submit" class="btn btn-success">Search</button>
+        </div>
     </form>
 
     {% include 'includes/groups_table.html' %}

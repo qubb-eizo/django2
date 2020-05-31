@@ -43,6 +43,11 @@ class GroupsUpdateView(UpdateView):
     def get_success_url(self):
         return reverse('groups:list')
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=None, **kwargs)
+        context['title'] = 'Edit group'
+        return context
+
 
 class GroupsCreateView(CreateView):
     model = Group

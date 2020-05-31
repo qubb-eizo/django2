@@ -17,13 +17,17 @@ from django.conf import settings
 from django.conf.urls import include
 from django.contrib import admin
 from django.urls import path
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls, name='admin-panel'),
-    path('', admin.site.urls),
+    path('', TemplateView.as_view(template_name='index.html'), name='index'),
+    path('success/', TemplateView.as_view(template_name='success.html'), name='success'),
+
     path('teachers/', include('teacher.urls')),
     path('students/', include('student.urls')),
-    path('groups/', include('group.urls'))
+    path('groups/', include('group.urls')),
+    path('account/', include('user_account.urls'))
 ]
 
 if settings.DEBUG:
