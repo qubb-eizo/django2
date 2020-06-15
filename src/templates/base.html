@@ -45,6 +45,9 @@
 
             <ul class="navbar-nav">
                 {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <img alt="picture" width="35" height="35" class="rounded-circle" src="{{ user.profile.image.url }}">
+                    </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="{% url 'user_account:profile' %}">Profile ({{ user.username }})</a>
                     </li>
@@ -63,47 +66,16 @@
         </div>
     </nav>
     <h2 class="p-4  mx-auto">{{ title }}</h2>
+    <div class="container">
+        <div class="p-1 m-1">
+            {% include 'includes/messages.html' %}
+        </div>
+    </div>
+    {% block content %}
+    {% endblock %}
     <p>
         Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
     </p>
-    {% block content %}
-    {% endblock %}
-    <nav aria-label="pagination page">
-        <ul class="pagination justify-content-end pagination-sm">
-            {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page=1" aria-label="First">
-                        <span aria-hidden="true">&laquo; First</span>
-                        <span class="sr-only">First</span>
-                    </a>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
-                        <span aria-hidden="true">&laquo; Previous</span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-            {% endif %}
-
-             <li class="page-item active">
-                <span class="page-link">
-                    {{ page_obj.number }}
-                <span class="sr-only">(current)</span>
-                    </span>
-
-            {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
-                        <span aria-hidden="true">Next &raquo;</span>
-                        <span class="sr-only">Next</span>
-                    </a>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
-                        <span aria-hidden="true">Last &raquo;</span>
-                        <span class="sr-only">Last</span>
-                    </a>
-                {% endif %}
-
-        </ul>
-    </nav>
 </div>
 
 </body>
