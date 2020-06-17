@@ -7,7 +7,6 @@ from user_account.models import UserAccountProfile
 
 
 class UserAccountRegistrationForm(UserCreationForm):
-
     class Meta(UserCreationForm.Meta):
         fields = ('username', 'first_name', 'last_name', 'email')
 
@@ -32,12 +31,10 @@ class UserAccountRegistrationForm(UserCreationForm):
 
 
 class UserAccountProfileForm(UserChangeForm):
-
     class Meta(UserChangeForm.Meta):
         fields = ('username', 'first_name', 'last_name', 'email')
 
     def clean_email(self):
-
         email = self.cleaned_data['email']
 
         if User.objects.all().filter(email=email).exclude(id=self.instance.id).exists():
