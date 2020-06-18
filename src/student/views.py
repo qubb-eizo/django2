@@ -1,8 +1,10 @@
 from django.db.models import Q
 from django.http import HttpResponse
 from django.urls import reverse, reverse_lazy
+from django.utils.http import urlencode
 from django.views.generic import ListView, UpdateView, CreateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 
 from student.forms import StudentAddForm, StudentEditForm
 from student.models import Student
@@ -34,7 +36,10 @@ class StudentsListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=None, **kwargs)
+        params = self.request.GET
+
         context['title'] = 'Student list'
+        context['query_params'] = urlencode({k: v for k, v in params.items() if k != 'page'})
         return context
 
 
@@ -69,4 +74,5 @@ class StudentsDeleteView(LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('user_account:login')
 
     def get_success_url(self):
+        messages.success(self.request, f'Student has been deleted!')
         return reverse('students:list')

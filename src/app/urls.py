@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf import settings
 from django.conf.urls import include
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from django.views.generic import TemplateView
@@ -29,6 +30,9 @@ urlpatterns = [
     path('groups/', include('group.urls')),
     path('account/', include('user_account.urls'))
 ]
+
+urlpatterns += \
+    static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
     import debug_toolbar
