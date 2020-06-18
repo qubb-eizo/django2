@@ -22,4 +22,4 @@ class UserAccountProfile(models.Model):
                         save=False
                         )
 
-        super(UserAccountProfile, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
